@@ -22,7 +22,7 @@ namespace Song
                 _lines.Add($"There was an old lady who swallowed a {animalName}.");
                 _lines.Add($"I don't know why she swallowed a {animalName} - perhaps she'll die!");
                 _lastAnimalName = animalName;
-                return ParseVerse();
+                return VerseToString();
             }
 
             _lines[0] = $"There was an old lady who swallowed a {animalName};";
@@ -39,10 +39,10 @@ namespace Song
             _lines.Insert(2, $"She swallowed the {animalName} to catch the {_lastAnimalName}");
 
             _lastAnimalName = animalName;
-            return ParseVerse();
+            return VerseToString();
         }
 
-        private string ParseVerse()
+        private string VerseToString()
         {
             StringBuilder sb = new StringBuilder();
 
