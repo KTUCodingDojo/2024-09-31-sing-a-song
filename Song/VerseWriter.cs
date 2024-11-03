@@ -1,66 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Song
 {
     public class VerseWriter
     {
-        private List<string> _lines;
+        private string _firstLine;
+
+        private string _uniqueLine;
+
+        private List<string> _middleLines;
+
+        private string _lastLine;
+
         private string _lastAnimalName;
+
         public VerseWriter() 
         {
-            _lines = new List<string>();
+            _firstLine = string.Empty;
+            _uniqueLine = string.Empty;
+            _middleLines = new List<string>();
+            _lastLine = string.Empty;
             _lastAnimalName = string.Empty;
         }
         public virtual string WriteVerse(string animalName, string animalUniqueLine)
         {
-            if(_lines.Count == 0)
+            if(_firstLine.Equals(string.Empty))
             {
-                _lines.Add($"There was an old lady who swallowed a {animalName}.");
-                _lines.Add($"I don't know why she swallowed a {animalName} - perhaps she'll die!");
+                _firstLine = $"There was an old lady who swallowed a {animalName}.";
+                _lastLine = $"I don't know why she swallowed a {animalName} - perhaps she'll die!";
                 _lastAnimalName = animalName;
-                return VerseToString();
+                return ToString();
             }
 
-            _lines[0] = $"There was an old lady who swallowed a {animalName};";
+            _firstLine = $"There was an old lady who swallowed a {animalName};";
+            
+            _uniqueLine = animalUniqueLine;
 
-            if (_lines.Count == 2) 
-            {
-                _lines.Insert(1, animalUniqueLine);
-            }
-            else
-            {
-                _lines[1] = animalUniqueLine;
-            }
-
-            _lines.Insert(2, $"She swallowed the {animalName} to catch the {_lastAnimalName}");
+            _middleLines.Insert(0, $"She swallowed the {animalName} to catch the {_lastAnimalName}");
 
             _lastAnimalName = animalName;
-            return VerseToString();
+            return ToString();
         }
 
-        private string VerseToString()
+        public override string ToString()
         {
+            if(_firstLine == string.Empty) { return string.Empty; }
+
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine(_lines[0]);
-            
-            if(_lines.Count > 2)
+            if (_middleLines.Count == 0) 
             {
-                sb.AppendLine(_lines[1]);
-
-                for (int i = 2; i < _lines.Count - 2; i++)
-                {
-                    sb.AppendLine(_lines[i] + ",");
-                }
-
-                sb.AppendLine(_lines[_lines.Count - 2] + ";");
+                sb.AppendLine(_firstLine);
+                sb.Append(_lastLine);
+                return sb.ToString();
             }
 
-            sb.Append(_lines[_lines.Count - 1]);
+            sb.AppendLine(_firstLine);
+            sb.AppendLine(_uniqueLine);
+
+            for (int i = 0; i < _middleLines.Count; i++)
+            {
+                sb.AppendLine(_middleLines[i] + (i == _middleLines.Count - 1 ? ";" : ","));
+            }
+
+            sb.Append(_lastLine);
 
             return sb.ToString();
         }

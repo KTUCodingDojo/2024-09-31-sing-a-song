@@ -98,11 +98,20 @@ I don't know why she swallowed a fly - perhaps she'll die!"
 @"There was an old lady who swallowed a horse...
 ...She's dead, of course!";
 
-            VerseWriter writer = new VerseWriter();
+            var writer = new VerseWriter();
 
             string actual = writer.FinalVerse("horse");
 
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+
+        public void ToString_EmptyVerse_ReturnsEmptyString()
+        {
+            var writer = new VerseWriter();
+
+            writer.ToString().Should().Be(string.Empty);
         }
     }
 }
