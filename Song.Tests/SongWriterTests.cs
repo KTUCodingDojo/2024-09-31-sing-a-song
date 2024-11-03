@@ -93,5 +93,13 @@ I don't know why she swallowed a fly - perhaps she'll die!"
 
             actual.Should().Be(expected);
         }
+
+        [Fact]
+        public void ToString_EmptySong_ReturnsEmptyString()
+        {
+            var songWriter = new SongWriter();
+
+            songWriter.ToString().Should().Be(string.Empty);
+        }
     }
 }

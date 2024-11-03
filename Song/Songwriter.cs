@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Song
 {
@@ -28,7 +24,7 @@ namespace Song
             string verse = _verseWriter.WriteVerse(animal, uniqueLine);
             _song.Append(verse);
 
-            return _song.ToString();
+            return ToString();
         }
 
         public string FinishSong(string animal)
@@ -37,6 +33,11 @@ namespace Song
 
             _song.Append(_verseWriter.FinalVerse(animal));
 
+            return ToString();
+        }
+
+        public override string ToString()
+        {
             return _song.ToString();
         }
     }
