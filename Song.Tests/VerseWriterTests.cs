@@ -1,7 +1,3 @@
-using System.Security.Cryptography;
-using System;
-using System.Text;
-
 namespace Song.Tests
 {
     public class VerseWriterTests
@@ -9,7 +5,7 @@ namespace Song.Tests
         [Fact]
         public void WriteVerse_SingleAnimalVerse()
         {
-            VerseWriter writer = new VerseWriter();
+            var writer = new VerseWriter();
             
             string expected =
 @"There was an old lady who swallowed a fly.
@@ -17,7 +13,7 @@ I don't know why she swallowed a fly - perhaps she'll die!";
 
             string actual = writer.WriteVerse("fly", "");
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -42,7 +38,7 @@ I don't know why she swallowed a fly - perhaps she'll die!";
                 actual = writer.WriteVerse(animal.Item1, animal.Item2);
             }
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Theory]
@@ -57,7 +53,7 @@ I don't know why she swallowed a fly - perhaps she'll die!";
                 actual = writer.WriteVerse(animal.Item1, animal.Item2);
             }
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         public static IEnumerable<object[]> AnimalTestCases => new List<object[]>
@@ -106,7 +102,7 @@ I don't know why she swallowed a fly - perhaps she'll die!"
 
             string actual = writer.FinalVerse("horse");
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
     }
 }

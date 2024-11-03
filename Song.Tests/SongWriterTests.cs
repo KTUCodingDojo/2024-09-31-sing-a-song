@@ -1,25 +1,29 @@
-using System.Text;
-
 namespace Song.Tests
 {
     public class SongWriterTests
     {
         [Fact]
-        public void Sing_SingleAnimal()
+        public void Sing_SingleAnimal_WorksAsExpected()
         {
             string expected =
 @"There was an old lady who swallowed a fly.
 I don't know why she swallowed a fly - perhaps she'll die!";
 
-            SongWriter writer = new SongWriter();
+            var verseWriterMock = new Mock<VerseWriter>();
+            verseWriterMock.Setup(vw => vw.WriteVerse("fly", "")).Returns(
+@"There was an old lady who swallowed a fly.
+I don't know why she swallowed a fly - perhaps she'll die!"
+            );
 
-            string actual = writer.Sing("fly", "");
+            var songWriter = new SongWriter(verseWriterMock.Object);
 
-            Assert.Equal(expected, actual);
+            string actual = songWriter.Sing("fly", "");
+
+            actual.Should().Be(expected);
         }
 
         [Fact]
-        public void Sing_TwoAnimals()
+        public void Sing_TwoAnimals_WorksAsExpected()
         {
             string expected =
 @"There was an old lady who swallowed a fly.
@@ -30,16 +34,28 @@ That wriggled and wiggled and tickled inside her.
 She swallowed the spider to catch the fly;
 I don't know why she swallowed a fly - perhaps she'll die!";
 
-            SongWriter writer = new SongWriter();
+            var verseWriterMock = new Mock<VerseWriter>();
+            verseWriterMock.Setup(vw => vw.WriteVerse("fly", "")).Returns(
+@"There was an old lady who swallowed a fly.
+I don't know why she swallowed a fly - perhaps she'll die!"
+            );
+            verseWriterMock.Setup(vw => vw.WriteVerse("spider", "That wriggled and wiggled and tickled inside her.")).Returns(
+@"There was an old lady who swallowed a spider;
+That wriggled and wiggled and tickled inside her.
+She swallowed the spider to catch the fly;
+I don't know why she swallowed a fly - perhaps she'll die!"
+            );
 
-            writer.Sing("fly", "");
-            string actual = writer.Sing("spider", "That wriggled and wiggled and tickled inside her.");
+            var songWriter = new SongWriter(verseWriterMock.Object);
 
-            Assert.Equal(expected, actual);
+            songWriter.Sing("fly", "");
+            string actual = songWriter.Sing("spider", "That wriggled and wiggled and tickled inside her.");
+
+            actual.Should().Be(expected);
         }
 
         [Fact]
-        public void Sing_TwoAnimalsAndFinish()
+        public void Sing_TwoAnimalsAndFinish_WorksAsExpected()
         {
             string expected =
 @"There was an old lady who swallowed a fly.
@@ -53,80 +69,29 @@ I don't know why she swallowed a fly - perhaps she'll die!
 There was an old lady who swallowed a horse...
 ...She's dead, of course!";
 
-            SongWriter writer = new SongWriter();
+            var verseWriterMock = new Mock<VerseWriter>();
+            verseWriterMock.Setup(vw => vw.WriteVerse("fly", "")).Returns(
+@"There was an old lady who swallowed a fly.
+I don't know why she swallowed a fly - perhaps she'll die!"
+            );
+            verseWriterMock.Setup(vw => vw.WriteVerse("spider", "That wriggled and wiggled and tickled inside her.")).Returns(
+@"There was an old lady who swallowed a spider;
+That wriggled and wiggled and tickled inside her.
+She swallowed the spider to catch the fly;
+I don't know why she swallowed a fly - perhaps she'll die!"
+            );
+            verseWriterMock.Setup(vw => vw.FinalVerse("horse")).Returns(
+@"There was an old lady who swallowed a horse...
+...She's dead, of course!"
+            );
+
+            var writer = new SongWriter(verseWriterMock.Object);
 
             writer.Sing("fly", "");
             writer.Sing("spider", "That wriggled and wiggled and tickled inside her.");
             string actual = writer.FinishSong("horse");
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
-
-        [Theory]
-        [MemberData(nameof(SongTestCases))]
-        public void Sing_FullSong(List<(string, string)> input, string expected)
-        {
-            SongWriter writer = new SongWriter();
-
-            for (int i = 0; i < input.Count - 1; i++) 
-            {
-                writer.Sing(input[i].Item1, input[i].Item2);
-            }
-            string actual = writer.FinishSong(input[input.Count - 1].Item1);
-
-            Assert.Equal(expected, actual);
-        }
-
-        public static IEnumerable<object[]> SongTestCases => new List<object[]>
-        {
-            new object[]
-            {
-                new List<(string, string)>
-                {
-                    ("fly", ""),
-                    ("spider", "That wriggled and wiggled and tickled inside her."),
-                    ("horse", "")
-                },
-
-@"There was an old lady who swallowed a fly.
-I don't know why she swallowed a fly - perhaps she'll die!
-
-There was an old lady who swallowed a spider;
-That wriggled and wiggled and tickled inside her.
-She swallowed the spider to catch the fly;
-I don't know why she swallowed a fly - perhaps she'll die!
-
-There was an old lady who swallowed a horse...
-...She's dead, of course!"
-            },
-
-            new object[]
-            {
-                new List<(string, string)>
-                {
-                    ("fly", ""),
-                    ("spider", "That wriggled and wiggled and tickled inside her."),
-                    ("bird", "How absurd to swallow a bird."),
-                    ("horse", "")
-                },
-
-@"There was an old lady who swallowed a fly.
-I don't know why she swallowed a fly - perhaps she'll die!
-
-There was an old lady who swallowed a spider;
-That wriggled and wiggled and tickled inside her.
-She swallowed the spider to catch the fly;
-I don't know why she swallowed a fly - perhaps she'll die!
-
-There was an old lady who swallowed a bird;
-How absurd to swallow a bird.
-She swallowed the bird to catch the spider,
-She swallowed the spider to catch the fly;
-I don't know why she swallowed a fly - perhaps she'll die!
-
-There was an old lady who swallowed a horse...
-...She's dead, of course!"
-            },
-        };
     }
 }

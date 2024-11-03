@@ -15,7 +15,7 @@ namespace Song
             _lines = new List<string>();
             _lastAnimalName = string.Empty;
         }
-        public string WriteVerse(string animalName, string animalUniqueLine)
+        public virtual string WriteVerse(string animalName, string animalUniqueLine)
         {
             if(_lines.Count == 0)
             {
@@ -65,7 +65,7 @@ namespace Song
             return sb.ToString();
         }
 
-        public string FinalVerse(string animalName)
+        public virtual string FinalVerse(string animalName)
         {
             return 
 @$"There was an old lady who swallowed a {animalName}...
