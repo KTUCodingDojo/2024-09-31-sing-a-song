@@ -8,86 +8,52 @@ namespace Song
 
         private string _uniqueLine;
 
-        private List<string> _middleLines;
+        private string _middleLines;
 
         private string _lastLine;
 
-        private string _lastAnimalName;
+        private LineWriter _lineWriter;
 
-        public VerseWriter() 
+        public VerseWriter(LineWriter writer)
         {
             _firstLine = string.Empty;
             _uniqueLine = string.Empty;
-            _middleLines = new List<string>();
+            _middleLines = string.Empty;
             _lastLine = string.Empty;
-            _lastAnimalName = string.Empty;
+            _lineWriter = writer;
         }
+
+        public VerseWriter() : this(new LineWriter()) { }
+
         public virtual string WriteVerse(string animalName, string animalUniqueLine)
         {
-            UpdateFirstLine(animalName);
+            _firstLine = _lineWriter.WriteFirstLine(animalName);
 
-            UpdateMiddleLines(animalName, animalUniqueLine);
+            _uniqueLine = animalUniqueLine;
 
-            UpdateLastLine(animalName);
+            _middleLines = _lineWriter.WriteMiddleLines(animalName);
 
-            _lastAnimalName = animalName;
+            _lastLine = _lineWriter.WriteLastLine(animalName);
 
             return ToString();
-        }
-
-        private void UpdateFirstLine(string animalName)
-        {
-            if (_firstLine.Equals(string.Empty))
-            {
-                _firstLine = $"There was an old lady who swallowed a {animalName}.";
-            }
-            else
-            {
-                _firstLine = $"There was an old lady who swallowed a {animalName};";
-            }
-        }
-
-        private void UpdateMiddleLines(string animalName, string animalUniqueLine)
-        {
-            if (!_lastAnimalName.Equals(string.Empty)) 
-            {
-                _uniqueLine = animalUniqueLine;
-                _middleLines.Insert(0, $"She swallowed the {animalName} to catch the {_lastAnimalName}");
-            }
-        }
-
-        private void UpdateLastLine(string animalName)
-        {
-            if (_lastLine.Equals(string.Empty))
-            {
-                _lastLine = $"I don't know why she swallowed a {animalName} - perhaps she'll die!";
-            }
         }
 
         public override string ToString()
         {
             if (_firstLine.Equals(string.Empty)) { return string.Empty; }
 
-            StringBuilder sb = new StringBuilder();
-
-            if (_middleLines.Count == 0) 
+            if (_middleLines.Equals(string.Empty))
             {
-                sb.AppendLine(_firstLine);
-                sb.Append(_lastLine);
-                return sb.ToString();
+                return 
+$@"{_firstLine}
+{_lastLine}";
             }
 
-            sb.AppendLine(_firstLine);
-            sb.AppendLine(_uniqueLine);
-
-            for (int i = 0; i < _middleLines.Count; i++)
-            {
-                sb.AppendLine(_middleLines[i] + (i == _middleLines.Count - 1 ? ";" : ","));
-            }
-
-            sb.Append(_lastLine);
-
-            return sb.ToString();
+            return 
+$@"{_firstLine}
+{_uniqueLine}
+{_middleLines}
+{_lastLine}";
         }
 
         public virtual string FinalVerse(string animalName)
