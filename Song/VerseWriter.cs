@@ -24,27 +24,49 @@ namespace Song
         }
         public virtual string WriteVerse(string animalName, string animalUniqueLine)
         {
-            if(_firstLine.Equals(string.Empty))
-            {
-                _firstLine = $"There was an old lady who swallowed a {animalName}.";
-                _lastLine = $"I don't know why she swallowed a {animalName} - perhaps she'll die!";
-                _lastAnimalName = animalName;
-                return ToString();
-            }
+            UpdateFirstLine(animalName);
 
-            _firstLine = $"There was an old lady who swallowed a {animalName};";
-            
-            _uniqueLine = animalUniqueLine;
+            UpdateMiddleLines(animalName, animalUniqueLine);
 
-            _middleLines.Insert(0, $"She swallowed the {animalName} to catch the {_lastAnimalName}");
+            UpdateLastLine(animalName);
 
             _lastAnimalName = animalName;
+
             return ToString();
+        }
+
+        private void UpdateFirstLine(string animalName)
+        {
+            if (_firstLine.Equals(string.Empty))
+            {
+                _firstLine = $"There was an old lady who swallowed a {animalName}.";
+            }
+            else
+            {
+                _firstLine = $"There was an old lady who swallowed a {animalName};";
+            }
+        }
+
+        private void UpdateMiddleLines(string animalName, string animalUniqueLine)
+        {
+            if (!_lastAnimalName.Equals(string.Empty)) 
+            {
+                _uniqueLine = animalUniqueLine;
+                _middleLines.Insert(0, $"She swallowed the {animalName} to catch the {_lastAnimalName}");
+            }
+        }
+
+        private void UpdateLastLine(string animalName)
+        {
+            if (_lastLine.Equals(string.Empty))
+            {
+                _lastLine = $"I don't know why she swallowed a {animalName} - perhaps she'll die!";
+            }
         }
 
         public override string ToString()
         {
-            if(_firstLine == string.Empty) { return string.Empty; }
+            if (_firstLine.Equals(string.Empty)) { return string.Empty; }
 
             StringBuilder sb = new StringBuilder();
 
