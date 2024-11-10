@@ -16,7 +16,7 @@ namespace Song
 
         public string Sing(string animal, string uniqueLine)
         {
-            if(_song.Length != 0)
+            if (_song.Length != 0)
             {
                 _song.Append(Environment.NewLine + Environment.NewLine);
             }
